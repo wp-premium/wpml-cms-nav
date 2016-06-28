@@ -130,16 +130,6 @@ if ( ! class_exists( 'WPML_Dependencies' ) ) {
 			}
 		}
 
-		private function is_wpml_core_page( $page = '' ) {
-			if ( class_exists( 'WPML_WP_API' ) ) {
-				$wpml_wp_api = new WPML_WP_API();
-
-				return $wpml_wp_api->is_core_page( $page );
-			}
-
-			return false;
-		}
-
 		private function init_plugins() {
 			if ( ! $this->installed_plugins ) {
 				if ( ! function_exists( 'get_plugin_data' ) ) {
@@ -167,7 +157,7 @@ if ( ! class_exists( 'WPML_Dependencies' ) ) {
 
 		private function add_installed_plugin( $plugin ) {
 			$data       = get_plugin_data( $plugin );
-			$plugin_dir = dirname( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
+			$plugin_dir = dirname( $plugin );
 
 			if ( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR !== $plugin_dir ) {
 				$plugin_folder = str_replace( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR, '', $plugin_dir );
