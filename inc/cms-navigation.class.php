@@ -60,7 +60,7 @@ class WPML_CMS_Navigation{
         // theme hooks
         add_action('icl_navigation_breadcrumb', array($this, 'cms_navigation_breadcrumb'));
         add_action('icl_navigation_menu', array($this, 'cms_navigation_menu_nav'));
-        add_action('icl_navigation_sidebar', array($this, 'cms_navigation_page_navigation'));
+        add_action('icl_navigation_sidebar', array( $this, 'page_navigation' ));
         
         // more hooks
         add_action('save_post', array($this, 'cms_navigation_update_post_settings'), 4, 2);
@@ -711,7 +711,7 @@ class WPML_CMS_Navigation{
         echo $output;
     }    
     
-    function cms_navigation_page_navigation($instance = false){
+    function page_navigation($instance = false){
         if(!is_page()) return;
         global $post, $wpdb;
         global $sitepress;    
@@ -802,7 +802,7 @@ class WPML_CMS_Navigation{
                     <li class="<?php if($post->ID==$s):?>selected_page_side <?php endif;?>icl-level-1"><?php
                         if($post->ID!=$s):?><a href="<?php echo get_permalink($s); ?>"><?php endif?><span><?php echo get_the_title($s) ?></span><?php if($post->ID!=$s):?></a><?php endif;                                
                             if(!get_post_meta($s, '_cms_nav_minihome', 1)){
-                                $this->__cms_navigation_child_pages_recursive($s, $order); 
+                                $this->child_pages_recursive( $s, $order);
                             }                
                     ?></li>
                     <?php endforeach;?>            
@@ -833,7 +833,7 @@ class WPML_CMS_Navigation{
         echo $output;
     }
 
-	function __cms_navigation_child_pages_recursive( $pid, $order, $level = 2 )
+	function child_pages_recursive( $pid, $order, $level = 2 )
 	{
 		global $wpdb, $post;
 		$subpages_prepared = $wpdb->prepare( "
@@ -848,7 +848,7 @@ class WPML_CMS_Navigation{
 				<li class="<?php if ( $post->ID == $s->ID ): ?>selected <?php endif; ?>icl-level-<?php echo $level ?>"><?php
 			if ( $post->ID != $s->ID ):?><a href="<?php echo get_permalink( $s->ID ) ?>"><?php endif; ?><span><?php echo get_the_title( $s->ID ) ?></span><?php if ( $post->ID != $s->ID ): ?></a><?php endif;
 				if ( !$s->minihome ) {
-					$this->__cms_navigation_child_pages_recursive( $s->ID, $order, $level + 1 );
+					$this->child_pages_recursive( $s->ID, $order, $level + 1 );
 				}
 				?></li>
 			<?php endforeach; ?>
@@ -905,12 +905,12 @@ class WPML_CMS_Navigation{
         
     }
 
-		function cms_navigation_page_edit_options() {
-			global $sitepress;
-			if ( function_exists( 'add_meta_box' ) && $sitepress->get_setting( 'setup_complete' ) ) {
-				add_meta_box( 'cmsnavdiv', __( 'CMS Navigation', 'wpml-cms-nav' ), array( $this, 'cms_navigation_meta_box' ), 'page', 'normal', 'high' );
-			}
-    }
+	function cms_navigation_page_edit_options() {
+		global $sitepress;
+		if ( function_exists( 'add_meta_box' ) && $sitepress->get_setting( 'setup_complete' ) ) {
+			add_meta_box( 'cmsnavdiv', __( 'CMS Navigation', 'wpml-cms-nav' ), array( $this, 'cms_navigation_meta_box' ), 'page', 'normal', 'high' );
+		}
+}
 
     function cms_navigation_meta_box($post){
         global $wpdb, $sitepress;

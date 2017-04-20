@@ -25,7 +25,7 @@ class WPML_Navigation_Widget extends WP_Widget {
 
 		echo $before_widget;
 		global $iclCMSNavigation;
-		$iclCMSNavigation->cms_navigation_page_navigation($instance);
+		$iclCMSNavigation->page_navigation( $instance);
 		echo $after_widget;
 
 	}
