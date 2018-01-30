@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'WPML_CMS_Nav_Pages' => $baseDir . '/inc/class-wpml-cms-nav-pages.php',
     'WPML_CMS_Navigation' => $baseDir . '/inc/cms-navigation.class.php',
     'WPML_Cache_Directory' => $vendorDir . '/wpml-shared/wpml-lib-cache/src/cache/class-wpml-cache-directory.php',
     'WPML_Dependencies' => $vendorDir . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-dependencies.php',
