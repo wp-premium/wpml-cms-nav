@@ -2,26 +2,33 @@
 /*
 Plugin Name: WPML CMS Nav
 Plugin URI: https://wpml.org/
-Description: Adds CMS navigation elements to sites built with WPML | <a href="https://wpml.org">Documentation</a> | <a href="https://wpml.org/version/cms-nav-1-4-21/">WPML CMS Nav 1.4.21 release notes</a>
+Description: Adds CMS navigation elements to sites built with WPML | <a href="https://wpml.org">Documentation</a> | <a href="https://wpml.org/version/cms-nav-1-4-22/">WPML CMS Nav 1.4.22 release notes</a>
 Author: OnTheGoSystems
 Author URI: http://www.onthegosystems.com/
-Version: 1.4.21
+Version: 1.4.22
 Plugin Slug: wpml-cms-nav
 */
 
 if(defined('WPML_CMS_NAV_VERSION')) return;
 
-define('WPML_CMS_NAV_VERSION', '1.4.21');
+define('WPML_CMS_NAV_VERSION', '1.4.22');
 define('WPML_CMS_NAV_PLUGIN_PATH', dirname(__FILE__));
 
+$autoloader_dir = WPML_CMS_NAV_PLUGIN_PATH . '/vendor';
+if ( version_compare( PHP_VERSION, '5.3.0' ) >= 0 ) {
+	$autoloader = $autoloader_dir . '/autoload.php';
+} else {
+	$autoloader = $autoloader_dir . '/autoload_52.php';
+}
+require_once $autoloader;
+
 require WPML_CMS_NAV_PLUGIN_PATH . '/inc/constants.php';
-require WPML_CMS_NAV_PLUGIN_PATH . '/inc/cms-navigation.class.php';
 require WPML_CMS_NAV_PLUGIN_PATH . '/inc/cache.class.php';
 require WPML_CMS_NAV_PLUGIN_PATH . '/inc/functions.php';
 require WPML_CMS_NAV_PLUGIN_PATH . '/inc/upgrade.php';
 
 $iclCMSNavigation = new WPML_CMS_Navigation();
-    
+
 // Multisite support
 if ( function_exists('is_multisite') && is_multisite() ) {
     $wpmu_sitewide_plugins = (array) maybe_unserialize( get_site_option( 'active_sitewide_plugins' ) );
