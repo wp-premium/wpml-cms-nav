@@ -11,9 +11,7 @@ class WPML_CMS_Navigation{
     
     function init(){
         global $cms_nav_ie_ver;
-        
-        $this->plugin_localization();
-        
+
         // Check if WPML is active. If not display warning message and not load CMS Navigation
         if(!defined('ICL_SITEPRESS_VERSION') || ICL_PLUGIN_INACTIVE){
             if ( !function_exists('is_multisite') || !is_multisite() ) {
@@ -43,10 +41,10 @@ class WPML_CMS_Navigation{
             $cms_nav_ie_ver = $matches[1];
         }
 
-        // Setup the WP-Admin resources
-	    add_action( 'admin_init', array($this, 'admin_init') );
+	    // Setup the WP-Admin resources
+	    add_action( 'admin_init', array( $this, 'admin_init' ) );
         // Setup the WP-Admin menus
-        add_action('admin_menu', array($this, 'menu'));
+        add_action('wpml_admin_menu_configure', array($this, 'menu'));
         
         // Clear cache hook
         add_action('wp_ajax_wpml_cms_nav_clear_nav_cache', array($this, 'clear_cache'));
@@ -80,17 +78,17 @@ class WPML_CMS_Navigation{
         // add message to WPML dashboard widget
         add_action('icl_dashboard_widget_content', array($this, 'icl_dashboard_widget_content'));
 
-		return true;
+	    return true;
     }
 
 	function plugins_loaded() {
+		$this->plugin_localization();
 
-        // Initialize sidebar navigation widget
-	    add_action( 'widgets_init', array( $this, 'sidebar_navigation_widget_init' ) );
+		// Initialize sidebar navigation widget
+		add_action( 'widgets_init', array( $this, 'sidebar_navigation_widget_init' ) );
 
-	    // Load resources
-	    add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ) );
-
+		// Load resources
+		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ) );
 	}
 
 	function script_and_styles() {
@@ -130,17 +128,24 @@ class WPML_CMS_Navigation{
     function save_settings(){
         update_option('wpml_cms_nav_settings', $this->settings);            
     }
-    
-    function menu(){
-	    if(!defined('ICL_PLUGIN_PATH')) return;
-		global $sitepress;
-		if(!isset($sitepress) || (method_exists($sitepress,'get_setting') && !$sitepress->get_setting( 'setup_complete'))) return;
 
-        $top_page = apply_filters('icl_menu_main_page', basename(ICL_PLUGIN_PATH).'/menu/languages.php');
-        add_submenu_page($top_page, 
-            __('Navigation','wpml-cms-nav'), __('Navigation','wpml-cms-nav'),
-            'wpml_manage_navigation', basename(WPML_CMS_NAV_PLUGIN_PATH).'/menu/navigation.php');            
-    }
+	/**
+	 * @param string $menu_id
+	 */
+	function menu( $menu_id ) {
+		if ( 'WPML' !== $menu_id ) {
+			return;
+		}
+
+		$menu               = array();
+		$menu['order']      = 1100;
+		$menu['page_title'] = __( 'Navigation', 'sitepress' );
+		$menu['menu_title'] = __( 'Navigation', 'sitepress' );
+		$menu['capability'] = 'wpml_manage_navigation';
+		$menu['menu_slug']  = basename( WPML_CMS_NAV_PLUGIN_PATH ) . '/menu/navigation.php';
+
+		do_action( 'wpml_admin_menu_register_item', $menu );
+	}
     
     function save_form(){
         global $wpdb;
@@ -150,7 +155,7 @@ class WPML_CMS_Navigation{
         }
         
         $this->settings['page_order'] = $_POST['icl_navigation_page_order'];
-        $this->settings['show_cat_menu'] = @intval($_POST['icl_navigation_show_cat_menu']);
+        $this->settings['show_cat_menu'] = (int) $_POST['icl_navigation_show_cat_menu'];
         if($_POST['icl_navigation_cat_menu_title']){
             $this->settings['cat_menu_title'] = stripslashes($_POST['icl_navigation_cat_menu_title']);
             if(function_exists('icl_register_string')){
@@ -354,7 +359,7 @@ class WPML_CMS_Navigation{
                 the_title();   
                 rewind_posts();         
             }elseif (is_category()) {                
-                $cat = get_term(intval( get_query_var('cat')), 'category', OBJECT, 'display');
+                $cat = get_term( (int) get_query_var( 'cat'), 'category', OBJECT, 'display');
                 if(!empty($cat->parent)){
 					$category_parent = get_category_parents( $cat->parent, true, $this->settings[ 'breadcrumbs_separator' ] );
 					echo $category_parent;
