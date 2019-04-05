@@ -2,16 +2,16 @@
 /*
 Plugin Name: WPML CMS Nav
 Plugin URI: https://wpml.org/
-Description: Adds CMS navigation elements to sites built with WPML | <a href="https://wpml.org">Documentation</a> | <a href="https://wpml.org/version/cms-nav-1-4-24/">WPML CMS Nav 1.4.24 release notes</a>
+Description: Adds CMS navigation elements to sites built with WPML | <a href="https://wpml.org">Documentation</a> | <a href="https://wpml.org/version/cms-nav-1-5-0/">WPML CMS Nav 1.5.0 release notes</a>
 Author: OnTheGoSystems
 Author URI: http://www.onthegosystems.com/
-Version: 1.4.24
+Version: 1.5.0
 Plugin Slug: wpml-cms-nav
 */
 
 if(defined('WPML_CMS_NAV_VERSION')) return;
 
-define('WPML_CMS_NAV_VERSION', '1.4.24');
+define('WPML_CMS_NAV_VERSION', '1.5.0');
 define('WPML_CMS_NAV_PLUGIN_PATH', dirname(__FILE__));
 
 $autoloader_dir = WPML_CMS_NAV_PLUGIN_PATH . '/vendor';
