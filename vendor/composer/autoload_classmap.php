@@ -12,6 +12,4 @@ return array(
     'WPML_Dependencies' => $vendorDir . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-dependencies.php',
     'WPML_Navigation_Widget' => $baseDir . '/inc/widgets/sidebar_navigation_widget.class.php',
     'wpml_cms_nav_cache' => $baseDir . '/inc/cache.class.php',
-    'xrstf\\Composer52\\AutoloadGenerator' => $vendorDir . '/xrstf/composer-php52/lib/xrstf/Composer52/AutoloadGenerator.php',
-    'xrstf\\Composer52\\Generator' => $vendorDir . '/xrstf/composer-php52/lib/xrstf/Composer52/Generator.php',
 );
