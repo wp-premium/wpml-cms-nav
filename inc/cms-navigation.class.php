@@ -206,25 +206,23 @@ class WPML_CMS_Navigation{
         $this->settings['breadcrumbs_separator'] = stripslashes($_POST['icl_breadcrumbs_separator']);
         
         $this->save_settings();
-        
-        // clear the cms navigation caches
-		/** @var $offsite_url_cache wpml_cms_nav_cache */
-		$offsite_url_cache = $this->cache[ 'offsite_url_cache' ];
-		$offsite_url_cache->clear();
-        
-        $wpdb->query("TRUNCATE {$wpdb->prefix}icl_cms_nav_cache");
+
+        $this->clear_cache();
 
 		return true;
     }
     
     function clear_cache(){
-        global $wpdb;        
-        // clear the cache.
-		/** @var $offsite_url_cache wpml_cms_nav_cache */
-		$offsite_url_cache = $this->cache[ 'offsite_url_cache' ];
-		$offsite_url_cache->clear();
-        $wpdb->query("TRUNCATE {$wpdb->prefix}icl_cms_nav_cache");
-        
+        global $wpdb;
+
+        if ( $this->should_use_cache() ) {
+	        // clear the cache.
+	        /** @var $offsite_url_cache wpml_cms_nav_cache */
+	        $offsite_url_cache = $this->cache['offsite_url_cache'];
+	        $offsite_url_cache->clear();
+	        $wpdb->query( "TRUNCATE {$wpdb->prefix}icl_cms_nav_cache" );
+        }
+
         return true;
     }
         
@@ -242,7 +240,7 @@ class WPML_CMS_Navigation{
         }
         
         $output = null;
-        $use_cache = isset($this->settings['cache']) && $this->settings['cache'] && !(defined('WPML_CMS_NAV_DISABLE_CACHE') && WPML_CMS_NAV_DISABLE_CACHE);
+        $use_cache = $this->should_use_cache();
 		$cache_key = false;
 
         if ($use_cache) {
@@ -866,13 +864,8 @@ class WPML_CMS_Navigation{
 	}
 
 	function cms_navigation_update_post_settings($post_id, $post){
-        global $wpdb;
-                         
-        // clear the caches
-		/** @var $offsite_url_cache wpml_cms_nav_cache */
-		$offsite_url_cache = $this->cache[ 'offsite_url_cache' ];
-		$offsite_url_cache->clear();
-        $wpdb->query("TRUNCATE {$wpdb->prefix}icl_cms_nav_cache");
+
+        $this->clear_cache();
 
 		if ( ( isset( $post->post_status ) && $post->post_status === 'auto-draft' )
 		     || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
@@ -1117,4 +1110,10 @@ class WPML_CMS_Navigation{
 		return isset( $post->ancestors ) && is_array( $post->ancestors ) && count( $post->ancestors ) > 0;
 	}
 
+	/**
+	 * @return bool
+	 */
+	private function should_use_cache() {
+		return (bool) isset( $this->settings['cache'] ) && $this->settings['cache'] && ! ( defined( 'WPML_CMS_NAV_DISABLE_CACHE' ) && WPML_CMS_NAV_DISABLE_CACHE );
+	}
 }
