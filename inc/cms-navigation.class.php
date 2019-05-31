@@ -358,27 +358,33 @@ class WPML_CMS_Navigation{
                     echo $this->settings['breadcrumbs_separator'];
                 }
             }
-            
+
             if(is_home() && $page_for_posts && !isset($post_type_name)){                
                 echo get_the_title($page_for_posts);
-            }elseif(($post_type) && get_query_var($post_type)){                
-                the_post();
-                echo get_the_title();
-                rewind_posts();
-            }elseif(is_page() && $page_on_front!=$post->ID){                        
-                the_post();
+            }elseif(
+                    (
+                            is_page() ||
+                            ( isset( $post_types[$post_type]->hierarchical ) && $post_types[$post_type]->hierarchical )
+                    ) && $page_on_front !== $post->ID
+            ){
+	            the_post();
 	            if ( $this->post_has_ancestors( $post ) ) {
-                    $ancestors = array_reverse($post->ancestors);
-                    foreach($ancestors as $anc){
-                        if($page_on_front==$anc) {continue;}
-                        ?>
-                        <a href="<?php echo get_permalink($anc); ?>"><?php echo get_the_title($anc) ?></a><?php 
-                            echo $this->settings['breadcrumbs_separator']; 
-                    }            
-                }    
-                echo get_the_title();
-                rewind_posts();
-            }elseif(is_single()){                
+		            $ancestors = array_reverse($post->ancestors);
+
+		            foreach($ancestors as $anc){
+			            if($page_on_front==$anc) {continue;}
+			            ?>
+                        <a href="<?php echo get_permalink($anc); ?>"><?php echo get_the_title($anc) ?></a><?php
+			            echo $this->settings['breadcrumbs_separator'];
+		            }
+	            }
+	            echo get_the_title();
+	            rewind_posts();
+            }elseif(($post_type) && get_query_var($post_type)) {
+	            the_post();
+	            echo get_the_title();
+	            rewind_posts();
+            }elseif(is_single()){
                 the_post();
                 $cat = get_the_category();
 				if ( isset( $cat ) && is_array( $cat ) && count( $cat ) ) {
@@ -444,6 +450,8 @@ class WPML_CMS_Navigation{
                     );
             }            
         }
+
+
         echo $output;
     }    
     
