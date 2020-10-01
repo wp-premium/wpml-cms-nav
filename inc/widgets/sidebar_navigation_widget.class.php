@@ -5,12 +5,13 @@ class WPML_Navigation_Widget extends WP_Widget {
 	 * Sets up the widgets name etc
 	 */
 	public function __construct() {
-		parent::__construct( 'sidebar-navigation', // Base ID
-		                     __( 'Sidebar Navigation', 'wpml-cms-nav' ), // Name
-		                     array(
-			                     'description' => __( 'Sidebar Navigation', 'wpml-cms-nav' ),
-			                     'classname'   => 'icl_sidebar_navigation',
-		                     ) // Args
+		parent::__construct(
+			'sidebar-navigation', // Base ID.
+			__( 'Sidebar Navigation', 'wpml-cms-nav' ), // Name.
+			[
+				'description' => __( 'Sidebar Navigation', 'wpml-cms-nav' ),
+				'classname'   => 'icl_sidebar_navigation',
+			] // Args.
 		);
 	}
 
@@ -21,11 +22,11 @@ class WPML_Navigation_Widget extends WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
-		extract($args);
+		extract( $args );
 
 		echo $before_widget;
-		global $iclCMSNavigation;
-		$iclCMSNavigation->page_navigation( $instance);
+		global $wpml_cms_navigation;
+		$wpml_cms_navigation->page_navigation( $instance );
 		echo $after_widget;
 
 	}

@@ -9,7 +9,9 @@ return array(
     'WPML_CMS_Nav_Pages' => $baseDir . '/inc/class-wpml-cms-nav-pages.php',
     'WPML_CMS_Navigation' => $baseDir . '/inc/cms-navigation.class.php',
     'WPML_Cache_Directory' => $vendorDir . '/wpml-shared/wpml-lib-cache/src/cache/class-wpml-cache-directory.php',
+    'WPML_Core_Version_Check' => $vendorDir . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-core-version-check.php',
     'WPML_Dependencies' => $vendorDir . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-dependencies.php',
     'WPML_Navigation_Widget' => $baseDir . '/inc/widgets/sidebar_navigation_widget.class.php',
+    'WPML_PHP_Version_Check' => $vendorDir . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-php-version-check.php',
     'wpml_cms_nav_cache' => $baseDir . '/inc/cache.class.php',
 );
